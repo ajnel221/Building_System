@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -31,18 +32,27 @@ public class BuildingManager : MonoBehaviour
     private bool _isGhostInvalidPosition = false;
     private Transform _modelParent = null;
 
+    [Header("UI")]
+    [SerializeField] private GameObject _buildingUI;
+    [SerializeField] private TMP_Text _destroyText;
+
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.B))
+        if(Input.GetKeyDown(KeyCode.Tab))
         {
-            _isBuilding = !_isBuilding;
+            ToggleBuildingUI(!_buildingUI.activeInHierarchy);
         }
 
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            _isDestroying = !_isDestroying;
-        }
+        // if(Input.GetKeyDown(KeyCode.B))
+        // {
+        //     _isBuilding = !_isBuilding;
+        // }
+
+        // if(Input.GetKeyDown(KeyCode.V))
+        // {
+        //     _isDestroying = !_isDestroying;
+        // }
 
         if(_isBuilding && !_isDestroying)
         {
@@ -310,7 +320,7 @@ public class BuildingManager : MonoBehaviour
             Destroy(_ghostBuildGameObject);
             _ghostBuildGameObject = null;
 
-            _isBuilding = false;
+            //_isBuilding = false;
 
             foreach (Connector _connector in _newBuild.GetComponentsInChildren<Connector>())
             {
@@ -377,8 +387,56 @@ public class BuildingManager : MonoBehaviour
             }
 
             Destroy(_lastHitDestroyTransform.gameObject);
+
+            DestroyBuildingToggle(true);
             _lastHitDestroyTransform = null;
         }
+    }
+
+    public void ToggleBuildingUI(bool _active)
+    {
+        _isBuilding = false;
+        _buildingUI.SetActive(_active);
+
+        // Cursor.visible = _active;
+        // Cursor.lockState = _active ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+    public void DestroyBuildingToggle(bool _fromScript = false)
+    {
+        if(_fromScript)
+        {
+            _isDestroying = false;
+            _destroyText.text = "Destroy Off";
+            _destroyText.color = Color.green;
+        }
+        else
+        {
+            _isDestroying = !_isDestroying;
+            _destroyText.text = _isDestroying ? "Destroy On" : "Destroy Off";
+            _destroyText.color = _isDestroying ? Color.red : Color.green;
+            ToggleBuildingUI(false);
+        }
+    }
+
+    public void ChangeBuildType(string _selectedBuildType)
+    {
+        if(System.Enum.TryParse(_selectedBuildType, out SelectedBuildType _result))
+        {
+            _currentBuildType = _result;
+        }
+        else
+        {
+            Debug.Log("Build Type Does NOT Exist.");
+        }
+    }
+
+    public void StartBuilding(int _builIndex)
+    {
+        _currentBuildingIndex = _builIndex;
+        ToggleBuildingUI(false);
+
+        _isBuilding = true;
     }
 }
 
