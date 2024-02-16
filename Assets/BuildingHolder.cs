@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +7,6 @@ public class BuildingHolder : MonoBehaviour
     [SerializeField] private bool _buildingComplete = false;
     [SerializeField] private List<BuildingMaterialsNeeded> _needed;
     [SerializeField] private List<BuildingMaterialsNeeded> _inventory;
-
     [SerializeField] private GameObject[] _parts;
 
     private void Start()
