@@ -9,6 +9,7 @@ public class BuildingManager : MonoBehaviour
     [Header("Build Objects")]
     [SerializeField] private List<GameObject> _floorObjects = new List<GameObject>();
     [SerializeField] private List<GameObject> _wallObjects = new List<GameObject>();
+    [SerializeField] private List<GameObject> _roofObjects = new List<GameObject>();
 
     [Header("Build Settings")]
     [SerializeField] private SelectedBuildType _currentBuildType;
@@ -157,7 +158,7 @@ public class BuildingManager : MonoBehaviour
             }
         }
 
-        if(_bestConnector == null || _currentBuildType == SelectedBuildType.floor && _bestConnector.isConnectedToFloor || _currentBuildType == SelectedBuildType.wall && _bestConnector.isConnectedToWall)
+        if(_bestConnector == null || _currentBuildType == SelectedBuildType.floor && _bestConnector.isConnectedToFloor || _currentBuildType == SelectedBuildType.wall && _bestConnector.isConnectedToWall || _currentBuildType == SelectedBuildType.roof && _bestConnector.isConnectedToWall)
         {
             GhostifyModel(_modelParent, _ghostMaterialInvalid);
             _isGhostInvalidPosition = false;
@@ -306,6 +307,8 @@ public class BuildingManager : MonoBehaviour
 
             case SelectedBuildType.wall:
                 return _wallObjects[_currentBuildingIndex];
+            case SelectedBuildType.roof:
+                return _roofObjects[_currentBuildingIndex];
         }
 
         return null;
@@ -445,4 +448,5 @@ public enum SelectedBuildType
 {
     floor,
     wall,
+    roof,
 }
