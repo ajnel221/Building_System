@@ -25,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3142444095924139082}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -62,9 +62,11 @@ MonoBehaviour:
   connectorParentType: 0
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &3142444096108206235
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,14 +92,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3142444096108206235}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4116856141555044442}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &3142444096108206233
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -127,9 +129,11 @@ MonoBehaviour:
   connectorParentType: 0
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &3142444096850694844
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,9 +196,11 @@ MonoBehaviour:
   connectorParentType: 0
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &3142444097863537993
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,14 +226,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3142444097863537993}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4116856141555044442}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!135 &3142444097863537999
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -257,9 +263,11 @@ MonoBehaviour:
   connectorParentType: 0
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &3142444097991362586
 GameObject:
   m_ObjectHideFlags: 0

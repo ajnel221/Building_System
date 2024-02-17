@@ -61,7 +61,7 @@ Transform:
   m_GameObject: {fileID: 494720197567406768}
   m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 0.2, z: 5}
+  m_LocalScale: {x: 5, y: 0.2, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 494720197495838291}
@@ -155,14 +155,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494720198327168983}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.8, z: -1.8}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9226, z: -0.9085}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 494720199527907032}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &494720198327168968
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -189,12 +189,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectorPosition: 3
-  connectorParentType: 2
+  connectorParentType: 1
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &494720198638716491
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +223,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494720198638716491}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8, z: 1.8}
+  m_LocalPosition: {x: 0, y: 0.91, z: 0.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -257,9 +259,11 @@ MonoBehaviour:
   connectorParentType: 1
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &494720198839010974
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,9 +326,11 @@ MonoBehaviour:
   connectorParentType: 1
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &494720199141582534
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,9 +393,11 @@ MonoBehaviour:
   connectorParentType: 1
   isConnectedToFloor: 0
   isConnectedToWall: 0
+  isConnectedToRoof: 0
   canConnectTo: 1
   canConnectToFloor: 1
   canConnectToWall: 1
+  canConnectToRoof: 1
 --- !u!1 &494720199527907033
 GameObject:
   m_ObjectHideFlags: 0

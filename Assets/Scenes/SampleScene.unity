@@ -1657,7 +1657,6 @@ MonoBehaviour:
   - {fileID: 5852475103608131655, guid: 575496a6193051842a87534c96d69064, type: 3}
   _roofObjects:
   - {fileID: 494720197495838288, guid: df88065a21f2b3c42a224925710dcce8, type: 3}
-  - {fileID: 494720197495838288, guid: e72f46b2c3a9d404192cddd5eec8033e, type: 3}
   _currentBuildType: 0
   _connectorLayer:
     serializedVersion: 2
