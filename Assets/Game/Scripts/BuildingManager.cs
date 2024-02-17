@@ -158,7 +158,7 @@ public class BuildingManager : MonoBehaviour
             }
         }
 
-        if(_bestConnector == null || _currentBuildType == SelectedBuildType.floor && _bestConnector.isConnectedToFloor || _currentBuildType == SelectedBuildType.wall && _bestConnector.isConnectedToWall || _currentBuildType == SelectedBuildType.roof && _bestConnector.isConnectedToWall)
+        if(_bestConnector == null || _currentBuildType == SelectedBuildType.floor && _bestConnector.isConnectedToFloor || _currentBuildType == SelectedBuildType.wall && _bestConnector.isConnectedToWall || _currentBuildType == SelectedBuildType.roof && _bestConnector.isConnectedToRoof)
         {
             GhostifyModel(_modelParent, _ghostMaterialInvalid);
             _isGhostInvalidPosition = false;
@@ -174,6 +174,13 @@ public class BuildingManager : MonoBehaviour
         _ghostBuildGameObject.transform.position = _connector.transform.position - (_ghostConnector.position - _ghostBuildGameObject.transform.position);
 
         if(_currentBuildType == SelectedBuildType.wall)
+        {
+            Quaternion _newRotation = _ghostBuildGameObject.transform.rotation;
+            _newRotation.eulerAngles = new Vector3(_newRotation.eulerAngles.x, _connector.transform.rotation.eulerAngles.y, _newRotation.eulerAngles.z);
+            _ghostBuildGameObject.transform.rotation = _newRotation;
+        }
+
+        if(_currentBuildType == SelectedBuildType.roof)
         {
             Quaternion _newRotation = _ghostBuildGameObject.transform.rotation;
             _newRotation.eulerAngles = new Vector3(_newRotation.eulerAngles.x, _connector.transform.rotation.eulerAngles.y, _newRotation.eulerAngles.z);
@@ -307,6 +314,7 @@ public class BuildingManager : MonoBehaviour
 
             case SelectedBuildType.wall:
                 return _wallObjects[_currentBuildingIndex];
+
             case SelectedBuildType.roof:
                 return _roofObjects[_currentBuildingIndex];
         }

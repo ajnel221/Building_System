@@ -8,9 +8,11 @@ public class Connector : MonoBehaviour
 
     public bool isConnectedToFloor = false;
     public bool isConnectedToWall = false;
+    public bool isConnectedToRoof = false;
     public bool canConnectTo = true;
     public bool canConnectToFloor = true;
     public bool canConnectToWall = true;
+    public bool canConnectToRoof = true;
 
     private void OnDrawGizmos()
     {
@@ -24,6 +26,7 @@ public class Connector : MonoBehaviour
 
         isConnectedToFloor = !canConnectToFloor;
         isConnectedToWall = !canConnectToWall;
+        isConnectedToRoof = !canConnectToRoof;
 
         foreach (Collider item in _colliders)
         {
@@ -51,6 +54,11 @@ public class Connector : MonoBehaviour
                     isConnectedToWall = true;
                 }
 
+                if(_foundConnector.connectorParentType == SelectedBuildType.roof)
+                {
+                    isConnectedToRoof = true;
+                }
+
                 if(rootCall)
                 {
                     _foundConnector.UpdateConnectors();
@@ -60,7 +68,7 @@ public class Connector : MonoBehaviour
 
         canConnectTo = true;
 
-        if(isConnectedToFloor && isConnectedToWall)
+        if(isConnectedToFloor && isConnectedToWall && isConnectedToRoof)
         {
             canConnectTo = false;
         }
