@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 3142444097991362591}
   - component: {fileID: 3142444097991362584}
   - component: {fileID: 3142444097991362585}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Model
   m_TagString: Buildables
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4116856142353158053}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Floor
   m_TagString: Buildables
   m_Icon: {fileID: 0}

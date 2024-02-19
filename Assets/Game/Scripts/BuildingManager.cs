@@ -46,16 +46,6 @@ public class BuildingManager : MonoBehaviour
             ToggleBuildingUI(!_buildingUI.activeInHierarchy);
         }
 
-        // if(Input.GetKeyDown(KeyCode.B))
-        // {
-        //     _isBuilding = !_isBuilding;
-        // }
-
-        // if(Input.GetKeyDown(KeyCode.V))
-        // {
-        //     _isDestroying = !_isDestroying;
-        // }
-
         if(_isBuilding && !_isDestroying)
         {
             GhostBuild();
@@ -88,7 +78,39 @@ public class BuildingManager : MonoBehaviour
         CreateGhostPrefab(_currentBuild);
 
         MoveGhostPrefabToRaycast();
-        CheckBuilValidility();
+
+        if (_currentBuildType == SelectedBuildType.furniture)
+        {
+            int floorLayerMask = LayerMask.GetMask("Floor");
+            Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Vector3 raycastOrigin = _ghostBuildGameObject.transform.position;
+            Vector3 raycastDirection = Vector3.down;
+
+            if(Physics.Raycast(_ray, out hit))
+            {
+                if(hit.collider != null)
+                {
+                    Vector3 _newPos = new Vector3(_ghostBuildGameObject.transform.position.x, _ghostBuildGameObject.transform.position.y + .25f, _ghostBuildGameObject.transform.position.z);
+                    _ghostBuildGameObject.transform.position = _newPos;
+
+                    if (Physics.Raycast(_newPos, Vector3.down, out hit, 2f, floorLayerMask))
+                    {
+                        CheckBuilValidility();
+                        GhostifyModel(_modelParent, _ghostMaterialValid);
+                    }
+                    else
+                    {
+                        _isGhostInvalidPosition = false;
+                        GhostifyModel(_modelParent, _ghostMaterialInvalid);
+                    }
+                }
+            }
+        }
+        else
+        {
+            CheckBuilValidility();
+        }
     }
 
     private void CreateGhostPrefab(GameObject _currentBuild)
@@ -111,7 +133,10 @@ public class BuildingManager : MonoBehaviour
 
         if(Physics.Raycast(_ray, out _hit))
         {
-            _ghostBuildGameObject.transform.position = _hit.point;
+            if (_hit.collider != null)
+            {
+                _ghostBuildGameObject.transform.position = _hit.point;
+            }
         }
     }
 
@@ -129,15 +154,45 @@ public class BuildingManager : MonoBehaviour
 
             if(_isGhostInvalidPosition)
             {
-                Collider[] _overlapColliders = Physics.OverlapBox(_ghostBuildGameObject.transform.position, new Vector3(2f, 2f, 2f), _ghostBuildGameObject.transform.rotation);
-
-                foreach (Collider item in _overlapColliders)
+                if(_currentBuildType != SelectedBuildType.furniture)
                 {
-                    if(item.gameObject != _ghostBuildGameObject && item.transform.root.CompareTag("Buildables"))
+                    Collider[] _overlapColliders = Physics.OverlapBox(_ghostBuildGameObject.transform.position, new Vector3(2f, 2f, 2f), _ghostBuildGameObject.transform.rotation);
+
+                    foreach (Collider item in _overlapColliders)
+                    {
+                        if(item.gameObject != _ghostBuildGameObject && item.transform.root.CompareTag("Buildables"))
+                        {
+                            GhostifyModel(_modelParent, _ghostMaterialInvalid);
+                            _isGhostInvalidPosition = false;
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    RaycastHit hit;
+                    int floorLayerMask = LayerMask.GetMask("Floor");
+
+                    if (Physics.Raycast(_ghostBuildGameObject.transform.position, Vector3.down, out hit, 1f, floorLayerMask))
+                    {
+                        if(hit.collider != null)
+                        {
+                            if (Vector3.Angle(hit.normal, Vector3.up) < _maxGroundAngle)
+                            {
+                                GhostifyModel(_modelParent, _ghostMaterialValid);
+                                _isGhostInvalidPosition = true;
+                            }
+                            else
+                            {
+                                GhostifyModel(_modelParent, _ghostMaterialInvalid);
+                                _isGhostInvalidPosition = false;
+                            }
+                        }
+                    }
+                    else
                     {
                         GhostifyModel(_modelParent, _ghostMaterialInvalid);
                         _isGhostInvalidPosition = false;
-                        return;
                     }
                 }
             }
@@ -148,28 +203,35 @@ public class BuildingManager : MonoBehaviour
     {
         Connector _bestConnector = null;
 
-        foreach (Collider _collider in _colliders)
+        if(_currentBuildType != SelectedBuildType.furniture)
         {
-            Connector _connector = _collider.GetComponent<Connector>();
-
-            if(_connector.canConnectTo)
+            foreach (Collider _collider in _colliders)
             {
-                _bestConnector = _connector;
-                break;
+                Connector _connector = _collider.GetComponent<Connector>();
+
+                if(_connector.canConnectTo)
+                {
+                    _bestConnector = _connector;
+                    break;
+                }
             }
-        }
 
-        if(_bestConnector == null || _currentBuildType == SelectedBuildType.floor && _bestConnector.isConnectedToFloor || _currentBuildType == SelectedBuildType.wall && _bestConnector.isConnectedToWall || _currentBuildType == SelectedBuildType.roof && _bestConnector.isConnectedToRoof)
+            if(_bestConnector == null || _currentBuildType == SelectedBuildType.floor && _bestConnector.isConnectedToFloor || _currentBuildType == SelectedBuildType.wall && _bestConnector.isConnectedToWall || _currentBuildType == SelectedBuildType.roof && _bestConnector.isConnectedToRoof)
+            {
+                GhostifyModel(_modelParent, _ghostMaterialInvalid);
+                _isGhostInvalidPosition = false;
+                return;
+            }
+
+            SnapGhostPrefabToConnector(_bestConnector);
+        }
+        else
         {
-            GhostifyModel(_modelParent, _ghostMaterialInvalid);
-            _isGhostInvalidPosition = false;
-            return;
+            SnapGhostPrefabToConnector();
         }
-
-        SnapGhostPrefabToConnector(_bestConnector);
     }
 
-    private void SnapGhostPrefabToConnector(Connector _connector)
+    private void SnapGhostPrefabToConnector(Connector _connector = null)
     {
         if(_currentBuildType != SelectedBuildType.furniture)
         {
@@ -193,6 +255,11 @@ public class BuildingManager : MonoBehaviour
             GhostifyModel(_modelParent, _ghostMaterialValid);
             _isGhostInvalidPosition = true;
         }
+        else
+        {
+            GhostifyModel(_modelParent, _ghostMaterialValid);
+            _isGhostInvalidPosition = true;
+        }
     }
 
     private void GhostSeperateBuild()
@@ -202,22 +269,25 @@ public class BuildingManager : MonoBehaviour
 
         if(Physics.Raycast(_ray, out _hit))
         {
-            if(_currentBuildType == SelectedBuildType.wall)
+            if(_hit.collider != null)
             {
-                GhostifyModel(_modelParent, _ghostMaterialInvalid);
-                _isGhostInvalidPosition = false;
-                return;
-            }
+                if(_currentBuildType == SelectedBuildType.wall)
+                {
+                    GhostifyModel(_modelParent, _ghostMaterialInvalid);
+                    _isGhostInvalidPosition = false;
+                    return;
+                }
 
-            if(Vector3.Angle(_hit.normal, Vector3.up) < _maxGroundAngle)
-            {
-                GhostifyModel(_modelParent, _ghostMaterialValid);
-                _isGhostInvalidPosition = true;
-            }
-            else
-            {
-                GhostifyModel(_modelParent, _ghostMaterialInvalid);
-                _isGhostInvalidPosition = false;
+                if(Vector3.Angle(_hit.normal, Vector3.up) < _maxGroundAngle)
+                {
+                    GhostifyModel(_modelParent, _ghostMaterialValid);
+                    _isGhostInvalidPosition = true;
+                }
+                else
+                {
+                    GhostifyModel(_modelParent, _ghostMaterialInvalid);
+                    _isGhostInvalidPosition = false;
+                }
             }
         }
     }
@@ -352,29 +422,32 @@ public class BuildingManager : MonoBehaviour
 
         if(Physics.Raycast(_ray, out _hit))
         {
-            if(_hit.transform.root.CompareTag("Buildables"))
+            if(_hit.collider != null)
             {
-                if(!_lastHitDestroyTransform)
+                if(_hit.transform.root.CompareTag("Buildables"))
                 {
-                    _lastHitDestroyTransform = _hit.transform.root;
-
-                    _lastHitMaterials.Clear();
-
-                    foreach (MeshRenderer item in _lastHitDestroyTransform.GetComponentsInChildren<MeshRenderer>())
+                    if(!_lastHitDestroyTransform)
                     {
-                        _lastHitMaterials.Add(item.material);
-                    }
+                        _lastHitDestroyTransform = _hit.transform.root;
 
-                    GhostifyModel(_lastHitDestroyTransform.GetChild(0), _ghostMaterialInvalid);
+                        _lastHitMaterials.Clear();
+
+                        foreach (MeshRenderer item in _lastHitDestroyTransform.GetComponentsInChildren<MeshRenderer>())
+                        {
+                            _lastHitMaterials.Add(item.material);
+                        }
+
+                        GhostifyModel(_lastHitDestroyTransform.GetChild(0), _ghostMaterialInvalid);
+                    }
+                    else if(_hit.transform.root != _lastHitDestroyTransform)
+                    {
+                        ResetLastHitDestroyTransform();
+                    }
                 }
-                else if(_hit.transform.root != _lastHitDestroyTransform)
+                else if(_lastHitDestroyTransform)
                 {
                     ResetLastHitDestroyTransform();
                 }
-            }
-            else if(_lastHitDestroyTransform)
-            {
-                ResetLastHitDestroyTransform();
             }
         }
     }
@@ -404,7 +477,7 @@ public class BuildingManager : MonoBehaviour
 
             Destroy(_lastHitDestroyTransform.gameObject);
 
-            DestroyBuildingToggle(true);
+            //DestroyBuildingToggle(true);
             _lastHitDestroyTransform = null;
         }
     }
@@ -424,13 +497,13 @@ public class BuildingManager : MonoBehaviour
         {
             _isDestroying = false;
             _destroyText.text = "Destroy Off";
-            _destroyText.color = Color.green;
+            _destroyText.color = Color.red;
         }
         else
         {
             _isDestroying = !_isDestroying;
             _destroyText.text = _isDestroying ? "Destroy On" : "Destroy Off";
-            _destroyText.color = _isDestroying ? Color.red : Color.green;
+            _destroyText.color = _isDestroying ? Color.green : Color.red;
             ToggleBuildingUI(false);
         }
     }

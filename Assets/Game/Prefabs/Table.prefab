@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 1877026240807594110}
   m_Layer: 0
   m_Name: Table
-  m_TagString: Untagged
+  m_TagString: Buildables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -312,7 +312,7 @@ GameObject:
   - component: {fileID: 1877026241435779630}
   m_Layer: 0
   m_Name: Connectors
-  m_TagString: Untagged
+  m_TagString: Buildables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 1877026241508082423}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: Buildables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
