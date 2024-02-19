@@ -10,6 +10,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private List<GameObject> _floorObjects = new List<GameObject>();
     [SerializeField] private List<GameObject> _wallObjects = new List<GameObject>();
     [SerializeField] private List<GameObject> _roofObjects = new List<GameObject>();
+    [SerializeField] private List<GameObject> _furnitureObjects = new List<GameObject>();
 
     [Header("Build Settings")]
     [SerializeField] private SelectedBuildType _currentBuildType;
@@ -170,25 +171,28 @@ public class BuildingManager : MonoBehaviour
 
     private void SnapGhostPrefabToConnector(Connector _connector)
     {
-        Transform _ghostConnector = FindSnapConnector(_connector.transform, _ghostBuildGameObject.transform.GetChild(1));
-        _ghostBuildGameObject.transform.position = _connector.transform.position - (_ghostConnector.position - _ghostBuildGameObject.transform.position);
-
-        if(_currentBuildType == SelectedBuildType.wall)
+        if(_currentBuildType != SelectedBuildType.furniture)
         {
-            Quaternion _newRotation = _ghostBuildGameObject.transform.rotation;
-            _newRotation.eulerAngles = new Vector3(_newRotation.eulerAngles.x, _connector.transform.rotation.eulerAngles.y, _newRotation.eulerAngles.z);
-            _ghostBuildGameObject.transform.rotation = _newRotation;
-        }
+            Transform _ghostConnector = FindSnapConnector(_connector.transform, _ghostBuildGameObject.transform.GetChild(1));
+            _ghostBuildGameObject.transform.position = _connector.transform.position - (_ghostConnector.position - _ghostBuildGameObject.transform.position);
 
-        if(_currentBuildType == SelectedBuildType.roof)
-        {
-            Quaternion _newRotation = _ghostBuildGameObject.transform.rotation;
-            _newRotation.eulerAngles = new Vector3(_newRotation.eulerAngles.x, _connector.transform.rotation.eulerAngles.y, _newRotation.eulerAngles.z);
-            _ghostBuildGameObject.transform.rotation = _newRotation;
-        }
+            if(_currentBuildType == SelectedBuildType.wall)
+            {
+                Quaternion _newRotation = _ghostBuildGameObject.transform.rotation;
+                _newRotation.eulerAngles = new Vector3(_newRotation.eulerAngles.x, _connector.transform.rotation.eulerAngles.y, _newRotation.eulerAngles.z);
+                _ghostBuildGameObject.transform.rotation = _newRotation;
+            }
 
-        GhostifyModel(_modelParent, _ghostMaterialValid);
-        _isGhostInvalidPosition = true;
+            if(_currentBuildType == SelectedBuildType.roof)
+            {
+                Quaternion _newRotation = _ghostBuildGameObject.transform.rotation;
+                _newRotation.eulerAngles = new Vector3(_newRotation.eulerAngles.x, _connector.transform.rotation.eulerAngles.y, _newRotation.eulerAngles.z);
+                _ghostBuildGameObject.transform.rotation = _newRotation;
+            }
+
+            GhostifyModel(_modelParent, _ghostMaterialValid);
+            _isGhostInvalidPosition = true;
+        }
     }
 
     private void GhostSeperateBuild()
@@ -317,6 +321,9 @@ public class BuildingManager : MonoBehaviour
 
             case SelectedBuildType.roof:
                 return _roofObjects[_currentBuildingIndex];
+
+            case SelectedBuildType.furniture:
+                return _furnitureObjects[_currentBuildingIndex];
         }
 
         return null;
@@ -330,8 +337,6 @@ public class BuildingManager : MonoBehaviour
 
             Destroy(_ghostBuildGameObject);
             _ghostBuildGameObject = null;
-
-            //_isBuilding = false;
 
             foreach (Connector _connector in _newBuild.GetComponentsInChildren<Connector>())
             {
@@ -432,7 +437,7 @@ public class BuildingManager : MonoBehaviour
 
     public void ChangeBuildType(string _selectedBuildType)
     {
-        if(System.Enum.TryParse(_selectedBuildType, out SelectedBuildType _result))
+        if(Enum.TryParse(_selectedBuildType, out SelectedBuildType _result))
         {
             _currentBuildType = _result;
         }
@@ -457,4 +462,5 @@ public enum SelectedBuildType
     floor,
     wall,
     roof,
+    furniture,
 }
